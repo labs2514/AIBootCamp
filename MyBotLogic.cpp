@@ -7,7 +7,7 @@
 
 MyBotLogic::MyBotLogic()
 {
-	//Write Code Here
+	//Write Code Here	
 }
 
 MyBotLogic::~MyBotLogic()
@@ -30,12 +30,14 @@ void MyBotLogic::Init(const SInitData& _initData)
 {
 	BOT_LOGIC_LOG(mLogger, "Init", true);
 	
-	//Write Code Here
+	_hivemind = new Hivemind();
+	_hivemind->Init(_initData);
 }
 
 void MyBotLogic::GetTurnOrders(const STurnData& _turnData, std::list<SOrder>& _orders)
 {
 	BOT_LOGIC_LOG(mLogger, "GetTurnOrders", true);
 
-	//Write Code Here
+	_hivemind->UpdateGraph(_turnData);
+	_hivemind->PushNextOrder(_orders);
 }
