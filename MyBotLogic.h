@@ -2,6 +2,7 @@
 
 #include "BotLogicIF.h"
 #include "Logger.h"
+#include "Hivemind.h"
 
 #ifdef _DEBUG
 #define BOT_LOGIC_DEBUG
@@ -20,6 +21,9 @@ struct STurnData;
 //This class must be instantiated in main.cpp.
 class MyBotLogic : public virtual BotLogicIF
 {
+private:
+	Hivemind* _hivemind;
+
 public:
 	MyBotLogic();
 	virtual ~MyBotLogic();
