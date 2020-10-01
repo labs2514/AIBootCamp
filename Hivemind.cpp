@@ -2,6 +2,7 @@
 
 void Hivemind::Init(const SInitData& _initData)
 {
+	InitGraph(_initData.tileInfoArray, _initData.tileInfoArraySize);
 	InitNPCs(_initData.npcInfoArray, _initData.nbNPCs);
 }
 
@@ -28,9 +29,10 @@ void Hivemind::UpdateGraph(const STurnData& turnData)
 void Hivemind::InitNPCs(const SNPCInfo* npcInfoArray, const int nb)
 {
 	// TODO
+	// Pendant le parcours des npcs appeler _graph->setCellUser(cell du npc, uid du npc)
 }
 
 void Hivemind::InitGraph(const STileInfo* tileInfoArray, const int tileArraySize, const SObjectInfo* objectInfoArray, const int objectArraySize)
 {
-	// TODO
+	_graph = new Graph(tileInfoArray, tileArraySize, objectInfoArray, objectArraySize);
 }

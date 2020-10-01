@@ -2,16 +2,18 @@
 #include "Globals.h"
 #include "InitData.h"
 #include "TurnData.h"
+#include "Graph.h"
 
 #include <list>
 #include <vector>
+
 
 class Hivemind
 {
 private:
 	// TODO
 	// std::vector<NPC*> _npcs{};
-	// Graph _graph;
+	Graph *_graph;
 
 public:
 	Hivemind() = default;
