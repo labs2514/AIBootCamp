@@ -35,6 +35,7 @@ SET( AIBOT_HEADERS
 	MyBotLogic.h	
 	TurnData.h
 	Hivemind.h
+	Graph.h
 	
 	#DLL Stuff
 	Interop_API.h	
@@ -49,6 +50,7 @@ SET( AIBOT_SRC
 	Logger.cpp
 	MyBotLogic.cpp
 	Hivemind.cpp
+	Graph.cpp
 
 	#DLL Stuff
 	dllmain.cpp
