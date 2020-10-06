@@ -12,7 +12,7 @@ class Hivemind
 {
 private:
 	// TODO
-	// std::vector<NPC*> _npcs{};
+	//std::vector<NPC*> _npcs{}; // faire une map<int, NPC*> plutôt ?
 	Graph *_graph;
 
 public:
@@ -20,13 +20,12 @@ public:
 	~Hivemind() = default;
 
 	void Init(const SInitData& _initData);
-	void AStarSolution();
+	bool AStarSolution(); // renvoyer un bool pour savoir si on a trouvé une solution ?
 	void PushNextOrder(std::list<SOrder>& orders); // À voir...
 	void StopConflictingNPCs(); // À voir...
 	void UpdateGraph(const STurnData& turnData); // À voir...
 
 private:
 	void InitNPCs(const SNPCInfo* npcInfoArray, const int nb);
-	void InitGraph(const STileInfo* tileInfoArray, const int tileArraySize,
-				   const SObjectInfo* objectInfoArray = nullptr, const int objectArraySize = 0);
+	void InitGraph(const SInitData& _init);
 };

@@ -13,6 +13,7 @@ class Graph
 {
 private:
 	int _nbTiles;
+	int _maxTurns;
 	vector<STileCoord> _goals;
 	map<STileCoord,vector<STileCoord>> _graph;
 	map<STileCoord, int> _cellUsedBy;
@@ -20,10 +21,12 @@ private:
 	
 public:
 	Graph() = delete;
-	Graph(const STileInfo* tileInfoArray, const int tileArraySize,
-		  const SObjectInfo* objectInfoArray = nullptr, const int objectArraySize = 0);
+	Graph(const SInitData& _init);
 	vector<STileCoord> astarPath(STileCoord start, STileCoord goal);
+	vector<STileCoord> getBestPath(STileCoord start);
 	vector<STileCoord> getGoals() { return _goals; };
+	void reserveGoal(STileCoord goal);
+	void returnGoal(STileCoord goal);
 	int getCellUser(STileCoord cell) { return _cellUsedBy[cell]; };
 	void setCellUser(STileCoord cell, int uid) { _cellUsedBy[cell] = uid; };
 	void lockCell(STileCoord cell);
