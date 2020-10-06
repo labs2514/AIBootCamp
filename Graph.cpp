@@ -3,13 +3,15 @@
 #include <algorithm>
 #include <vector>
 #include <queue>
+#include <InitData.h>
 
 using namespace std;
 
-Graph::Graph(const STileInfo* tileInfoArray, const int tileArraySize, const SObjectInfo* objectInfoArray, const int objectArraySize)
+Graph::Graph(const SInitData& _init)
 {
-	_nbTiles = tileArraySize;
-	for_each(tileInfoArray + 0, tileInfoArray + _nbTiles, [&](STileInfo& tile)
+	_nbTiles = _init.tileInfoArraySize;
+	_maxTurns = _init.maxTurnNb;
+	for_each(_init.tileInfoArray + 0, _init.tileInfoArray + _nbTiles, [&](STileInfo& tile)
 	{
 		// Ignore forbidden cells
 		if (tile.type != Forbidden)
@@ -27,19 +29,19 @@ Graph::Graph(const STileInfo* tileInfoArray, const int tileArraySize, const SObj
 
 			//NE case
 			neighbor = { tile.q - 1, tile.r + 1 };
-			if (find_if(tileInfoArray + 0, tileInfoArray + _nbTiles, [&](STileInfo& otherTile)
+			if (find_if(_init.tileInfoArray + 0, _init.tileInfoArray + _nbTiles, [&](STileInfo& otherTile)
 				{return (otherTile.q == neighbor.first && otherTile.r == neighbor.second && otherTile.type != Forbidden); })
-				!= tileInfoArray + _nbTiles)
+				!= _init.tileInfoArray + _nbTiles)
 			{
 				// Is there an obstacle on actual cell blocking path to potential neighbor
-				if (find_if(objectInfoArray + 0, objectInfoArray + objectArraySize, [&](SObjectInfo& object)
+				if (find_if(_init.objectInfoArray + 0, _init.objectInfoArray + _init.objectInfoArraySize, [&](SObjectInfo& object)
 					{return (object.q == coord.first && object.r == coord.second && object.cellPosition == NE); })
-					== objectInfoArray + objectArraySize)
+					== _init.objectInfoArray + _init.objectInfoArraySize)
 				{
 					// Is there an obstacle on neighbor cell blocking path to actual cell
-					if (find_if(objectInfoArray + 0, objectInfoArray + objectArraySize, [&](SObjectInfo& object)
+					if (find_if(_init.objectInfoArray + 0, _init.objectInfoArray + _init.objectInfoArraySize, [&](SObjectInfo& object)
 						{return (object.q == neighbor.first && object.r == neighbor.second && object.cellPosition == SW); })
-						== objectInfoArray + objectArraySize)
+						== _init.objectInfoArray + _init.objectInfoArraySize)
 					{
 						neighbors.push_back(neighbor);
 					}
@@ -48,19 +50,19 @@ Graph::Graph(const STileInfo* tileInfoArray, const int tileArraySize, const SObj
 
 			//E case
 			neighbor = { tile.q , tile.r + 1 };
-			if (find_if(tileInfoArray + 0, tileInfoArray + _nbTiles, [&](STileInfo& otherTile)
+			if (find_if(_init.tileInfoArray + 0, _init.tileInfoArray + _nbTiles, [&](STileInfo& otherTile)
 				{return (otherTile.q == neighbor.first && otherTile.r == neighbor.second && otherTile.type != Forbidden); })
-				!= tileInfoArray + _nbTiles)
+				!= _init.tileInfoArray + _nbTiles)
 			{
 				// Is there an obstacle on actual cell blocking path to potential neighbor
-				if (find_if(objectInfoArray + 0, objectInfoArray + objectArraySize, [&](SObjectInfo& object)
+				if (find_if(_init.objectInfoArray + 0, _init.objectInfoArray + _init.objectInfoArraySize, [&](SObjectInfo& object)
 					{return (object.q == coord.first && object.r == coord.second && object.cellPosition == E); })
-					== objectInfoArray + objectArraySize)
+					== _init.objectInfoArray + _init.objectInfoArraySize)
 				{
 					// Is there an obstacle on neighbor cell blocking path to actual cell
-					if (find_if(objectInfoArray + 0, objectInfoArray + objectArraySize, [&](SObjectInfo& object)
+					if (find_if(_init.objectInfoArray + 0, _init.objectInfoArray + _init.objectInfoArraySize, [&](SObjectInfo& object)
 						{return (object.q == neighbor.first && object.r == neighbor.second && object.cellPosition == W); })
-						== objectInfoArray + objectArraySize)
+						== _init.objectInfoArray + _init.objectInfoArraySize)
 					{
 						neighbors.push_back(neighbor);
 					}
@@ -69,19 +71,19 @@ Graph::Graph(const STileInfo* tileInfoArray, const int tileArraySize, const SObj
 
 			//SE case
 			neighbor = { tile.q + 1, tile.r };
-			if (find_if(tileInfoArray + 0, tileInfoArray + _nbTiles, [&](STileInfo& otherTile)
+			if (find_if(_init.tileInfoArray + 0, _init.tileInfoArray + _nbTiles, [&](STileInfo& otherTile)
 				{return (otherTile.q == neighbor.first && otherTile.r == neighbor.second && otherTile.type != Forbidden); })
-				!= tileInfoArray + _nbTiles)
+				!= _init.tileInfoArray + _nbTiles)
 			{
 				// Is there an obstacle on actual cell blocking path to potential neighbor
-				if (find_if(objectInfoArray + 0, objectInfoArray + objectArraySize, [&](SObjectInfo& object)
+				if (find_if(_init.objectInfoArray + 0, _init.objectInfoArray + _init.objectInfoArraySize, [&](SObjectInfo& object)
 					{return (object.q == coord.first && object.r == coord.second && object.cellPosition == SE); })
-					== objectInfoArray + objectArraySize)
+					== _init.objectInfoArray + _init.objectInfoArraySize)
 				{
 					// Is there an obstacle on neighbor cell blocking path to actual cell
-					if (find_if(objectInfoArray + 0, objectInfoArray + objectArraySize, [&](SObjectInfo& object)
+					if (find_if(_init.objectInfoArray + 0, _init.objectInfoArray + _init.objectInfoArraySize, [&](SObjectInfo& object)
 						{return (object.q == neighbor.first && object.r == neighbor.second && object.cellPosition == NW); })
-						== objectInfoArray + objectArraySize)
+						== _init.objectInfoArray + _init.objectInfoArraySize)
 					{
 						neighbors.push_back(neighbor);
 					}
@@ -90,19 +92,19 @@ Graph::Graph(const STileInfo* tileInfoArray, const int tileArraySize, const SObj
 
 			//SW case
 			neighbor = { tile.q + 1, tile.r - 1 };
-			if (find_if(tileInfoArray + 0, tileInfoArray + _nbTiles, [&](STileInfo& otherTile)
+			if (find_if(_init.tileInfoArray + 0, _init.tileInfoArray + _nbTiles, [&](STileInfo& otherTile)
 				{return (otherTile.q == neighbor.first && otherTile.r == neighbor.second && otherTile.type != Forbidden); })
-				!= tileInfoArray + _nbTiles)
+				!= _init.tileInfoArray + _nbTiles)
 			{
 				// Is there an obstacle on actual cell blocking path to potential neighbor
-				if (find_if(objectInfoArray + 0, objectInfoArray + objectArraySize, [&](SObjectInfo& object)
+				if (find_if(_init.objectInfoArray + 0, _init.objectInfoArray + _init.objectInfoArraySize, [&](SObjectInfo& object)
 					{return (object.q == coord.first && object.r == coord.second && object.cellPosition == SW); })
-					== objectInfoArray + objectArraySize)
+					== _init.objectInfoArray + _init.objectInfoArraySize)
 				{
 					// Is there an obstacle on neighbor cell blocking path to actual cell
-					if (find_if(objectInfoArray + 0, objectInfoArray + objectArraySize, [&](SObjectInfo& object)
+					if (find_if(_init.objectInfoArray + 0, _init.objectInfoArray + _init.objectInfoArraySize, [&](SObjectInfo& object)
 						{return (object.q == neighbor.first && object.r == neighbor.second && object.cellPosition == NE); })
-						== objectInfoArray + objectArraySize)
+						== _init.objectInfoArray + _init.objectInfoArraySize)
 					{
 						neighbors.push_back(neighbor);
 					}
@@ -111,19 +113,19 @@ Graph::Graph(const STileInfo* tileInfoArray, const int tileArraySize, const SObj
 
 			//W case
 			neighbor = { tile.q , tile.r - 1};
-			if (find_if(tileInfoArray + 0, tileInfoArray + _nbTiles, [&](STileInfo& otherTile)
+			if (find_if(_init.tileInfoArray + 0, _init.tileInfoArray + _nbTiles, [&](STileInfo& otherTile)
 				{return (otherTile.q == neighbor.first && otherTile.r == neighbor.second && otherTile.type != Forbidden); })
-				!= tileInfoArray + _nbTiles)
+				!= _init.tileInfoArray + _nbTiles)
 			{
 				// Is there an obstacle on actual cell blocking path to potential neighbor
-				if (find_if(objectInfoArray + 0, objectInfoArray + objectArraySize, [&](SObjectInfo& object)
+				if (find_if(_init.objectInfoArray + 0, _init.objectInfoArray + _init.objectInfoArraySize, [&](SObjectInfo& object)
 					{return (object.q == coord.first && object.r == coord.second && object.cellPosition == W); })
-					== objectInfoArray + objectArraySize)
+					== _init.objectInfoArray + _init.objectInfoArraySize)
 				{
 					// Is there an obstacle on neighbor cell blocking path to actual cell
-					if (find_if(objectInfoArray + 0, objectInfoArray + objectArraySize, [&](SObjectInfo& object)
+					if (find_if(_init.objectInfoArray + 0, _init.objectInfoArray + _init.objectInfoArraySize, [&](SObjectInfo& object)
 						{return (object.q == neighbor.first && object.r == neighbor.second && object.cellPosition == E); })
-						== objectInfoArray + objectArraySize)
+						== _init.objectInfoArray + _init.objectInfoArraySize)
 					{
 						neighbors.push_back(neighbor);
 					}
@@ -132,19 +134,19 @@ Graph::Graph(const STileInfo* tileInfoArray, const int tileArraySize, const SObj
 
 			//NW case
 			neighbor = { tile.q - 1, tile.r };
-			if (find_if(tileInfoArray + 0, tileInfoArray + _nbTiles, [&](STileInfo& otherTile)
+			if (find_if(_init.tileInfoArray + 0, _init.tileInfoArray + _nbTiles, [&](STileInfo& otherTile)
 				{return (otherTile.q == neighbor.first && otherTile.r == neighbor.second && otherTile.type != Forbidden); })
-				!= tileInfoArray + _nbTiles)
+				!= _init.tileInfoArray + _nbTiles)
 			{
 				// Is there an obstacle on actual cell blocking path to potential neighbor
-				if (find_if(objectInfoArray + 0, objectInfoArray + objectArraySize, [&](SObjectInfo& object)
+				if (find_if(_init.objectInfoArray + 0, _init.objectInfoArray + _init.objectInfoArraySize, [&](SObjectInfo& object)
 					{return (object.q == coord.first && object.r == coord.second && object.cellPosition == NW); })
-					== objectInfoArray + objectArraySize)
+					== _init.objectInfoArray + _init.objectInfoArraySize)
 				{
 					// Is there an obstacle on neighbor cell blocking path to actual cell
-					if (find_if(objectInfoArray + 0, objectInfoArray + objectArraySize, [&](SObjectInfo& object)
+					if (find_if(_init.objectInfoArray + 0, _init.objectInfoArray + _init.objectInfoArraySize, [&](SObjectInfo& object)
 						{return (object.q == neighbor.first && object.r == neighbor.second && object.cellPosition == SE); })
-						== objectInfoArray + objectArraySize)
+						== _init.objectInfoArray + _init.objectInfoArraySize)
 					{
 						neighbors.push_back(neighbor);
 					}
@@ -171,6 +173,11 @@ vector<STileCoord> Graph::astarPath(STileCoord start, STileCoord goal)
 		
 	while (!queue.empty())
 	{
+		// Pas de chemin possible
+		if (queue.top().first > _maxTurns) {
+			return vector<STileCoord>{};
+		}
+
 		STileCoord current = queue.top().second;
 		queue.pop();
 
@@ -208,6 +215,35 @@ vector<STileCoord> Graph::astarPath(STileCoord start, STileCoord goal)
 	}
 
 	return path;
+}
+
+vector<STileCoord> Graph::getBestPath(STileCoord start)
+{
+	vector<STileCoord> bestPath{_maxTurns+1};
+	for (int i = 0; i < _goals.size(); i++)
+	{
+		vector<STileCoord> path = astarPath(start, _goals[i]);
+		if (!path.empty() && path.size() < bestPath.size())
+		{
+			bestPath = path;
+		}
+	}
+
+	if (bestPath.size() > _maxTurns) {
+		bestPath.clear();
+	}
+
+	return bestPath;
+}
+
+void Graph::reserveGoal(STileCoord goal)
+{
+	_goals.erase(find(begin(_goals), end(_goals), goal));
+}
+
+void Graph::returnGoal(STileCoord goal)
+{
+	_goals.push_back(goal);
 }
 
 
