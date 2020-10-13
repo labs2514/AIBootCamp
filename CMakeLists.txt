@@ -10,7 +10,6 @@ include_directories(
 # Filters
 include( Filters.cmake )
 
-
 SET( AIBOT_BUILDFILES 
 	
 	CleanAll.bat
@@ -36,6 +35,7 @@ SET( AIBOT_HEADERS
 	TurnData.h
 	Hivemind.h
 	Graph.h
+	NPC.h
 	
 	#DLL Stuff
 	Interop_API.h	
@@ -51,6 +51,7 @@ SET( AIBOT_SRC
 	MyBotLogic.cpp
 	Hivemind.cpp
 	Graph.cpp
+	NPC.cpp
 
 	#DLL Stuff
 	dllmain.cpp

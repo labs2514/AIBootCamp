@@ -22,7 +22,7 @@ struct STurnData;
 class MyBotLogic : public virtual BotLogicIF
 {
 private:
-	Hivemind* _hivemind;
+	Hivemind* _hivemind = nullptr;
 
 public:
 	MyBotLogic();
