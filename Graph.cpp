@@ -175,7 +175,7 @@ vector<STileCoord> Graph::astarPath(STileCoord start, STileCoord goal)
 	{
 		// Pas de chemin possible
 		if (queue.top().first > _maxTurns) {
-			return vector<STileCoord>{};
+			return {};
 		}
 
 		STileCoord current = queue.top().second;
@@ -219,19 +219,19 @@ vector<STileCoord> Graph::astarPath(STileCoord start, STileCoord goal)
 
 vector<STileCoord> Graph::getBestPath(STileCoord start)
 {
-	vector<STileCoord> bestPath{_maxTurns+1};
-	for (int i = 0; i < _goals.size(); i++)
+	if (_goals.empty())
+		return {};
+
+	vector<STileCoord> bestPath = astarPath(start, _goals[0]);
+
+	for_each(_goals.begin() + 1, _goals.end(), [&](const STileCoord& goal)
 	{
-		vector<STileCoord> path = astarPath(start, _goals[i]);
+		vector<STileCoord> path = astarPath(start, goal);
 		if (!path.empty() && path.size() < bestPath.size())
 		{
 			bestPath = path;
 		}
-	}
-
-	if (bestPath.size() > _maxTurns) {
-		bestPath.clear();
-	}
+	});
 
 	return bestPath;
 }
